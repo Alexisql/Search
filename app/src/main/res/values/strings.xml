@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Search</string>
+    <string name="error_icon">Warning</string>
 </resources>

@@ -16,11 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.alexis.search.ui.home.ShowHomeScreen
+import com.alexis.search.ui.home.HomeScreen
 import com.alexis.search.ui.maps.ShowMapScreen
 import com.alexis.search.ui.navigation.Navigation
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,7 +49,7 @@ fun ScreenOrientation(navController: NavHostController, innerPadding: PaddingVal
             modifier = Modifier.fillMaxSize()
         ) {
             Column(modifier = Modifier.weight(0.5f)) {
-                ShowHomeScreen(
+                HomeScreen(
                     modifier = Modifier,
                     navController = navController
                 )

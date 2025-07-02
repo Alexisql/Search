@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 val properties = Properties()
@@ -56,13 +56,24 @@ dependencies {
     //Hilt
     implementation(libs.hilt)
     implementation(libs.hilt.navigation)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     //Navigation
     implementation(libs.navigation.compose)
 
     //Google Map
     implementation(libs.google.map)
+
+    //Gson
+    implementation(libs.gson)
+
+    //Room
+    implementation(libs.room)
+    implementation(libs.room.paging)
+    ksp(libs.room.compiler)
+
+    //Paging
+    implementation(libs.paging)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
