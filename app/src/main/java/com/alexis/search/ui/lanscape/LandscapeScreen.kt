@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
@@ -21,10 +25,10 @@ fun LandscapeScreen(
     query: String,
     lazyCity: LazyPagingItems<City>,
     cameraPositionState: CameraPositionState,
-    homeViewModel: HomeViewModel,
-    idCountry: Int,
-    onChangeCountry: (Int) -> Unit
+    homeViewModel: HomeViewModel
 ) {
+    var idCountry by rememberSaveable { mutableIntStateOf(0) }
+
     Row(
         modifier = modifier.fillMaxSize()
     ) {
@@ -37,7 +41,7 @@ fun LandscapeScreen(
                     homeViewModel.searchCity(it)
                 },
                 onItemSelected = {
-                    onChangeCountry(it)
+                    idCountry = it
                 },
                 onFavoriteChange = { cityId, isFavorite ->
                     homeViewModel.updateFavorite(cityId, isFavorite)

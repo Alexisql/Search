@@ -51,15 +51,15 @@ class HomeViewModel @Inject constructor(
         .debounce(250)
         .flatMapLatest { query ->
             if (query.isBlank()) {
-                cityRepository.getFavoriteCities().catch {
-                    emit(PagingData.empty())
-                }
+                cityRepository.getFavoriteCities()
             } else {
-                cityRepository.searchCity(query).catch {
-                    emit(PagingData.empty())
-                }
+                cityRepository.searchCity(query)
             }
-        }.cachedIn(viewModelScope)
+        }
+        .catch {
+            emit(PagingData.empty())
+        }
+        .cachedIn(viewModelScope)
 
     fun searchCity(query: String) {
         _searchQuery.value = query
@@ -69,7 +69,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(dispatcherIO) {
             cityRepository.updateFavorite(cityId, isFavorite)
                 .onSuccess {
-                    Log.e("HomeViewModel", "Favorite status updated successfully")
+                    Log.i("HomeViewModel", "Favorite status updated successfully")
                 }
                 .onFailure {
                     Log.e("HomeViewModel", "Error updating favorite status", it)

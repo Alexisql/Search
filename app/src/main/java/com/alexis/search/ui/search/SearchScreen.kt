@@ -1,7 +1,6 @@
 package com.alexis.search.ui.search
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,7 +19,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -84,8 +81,13 @@ fun SearchScreen(
                                 onFavoriteChange(cityId, isFavorite)
                             }
                         )
-                    } else {
-                        LoadingItemPlaceholder()
+                    }
+                }
+                val isListEmpty = lazyCity.itemCount == 0
+
+                if (isListEmpty) {
+                    item {
+                        EmptyListContent()
                     }
                 }
             }
@@ -163,7 +165,7 @@ fun ItemCity(city: City, onItemSelected: (Int) -> Unit, onFavoriteChange: (Int, 
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
-            val  isFavorite = city.favorite
+            val isFavorite = city.favorite
             AddFloatingButton(
                 imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                 color = if (isFavorite) Color.Red else Color.Black,
@@ -176,17 +178,15 @@ fun ItemCity(city: City, onItemSelected: (Int) -> Unit, onFavoriteChange: (Int, 
 }
 
 @Composable
-fun LoadingItemPlaceholder() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp)
-            .padding(vertical = 4.dp)
-            .background(Color.LightGray.copy(alpha = 0.5f)),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+fun EmptyListContent() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "List Empty",
+            text = "No results found",
+            modifier = Modifier
+                .padding(16.dp)
         )
     }
 }

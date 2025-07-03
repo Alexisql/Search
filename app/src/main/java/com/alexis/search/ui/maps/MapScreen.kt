@@ -1,6 +1,5 @@
 package com.alexis.search.ui.maps
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,19 +32,11 @@ fun ShowMapScreen(
     when (val state = mapViewModel.state.collectAsStateWithLifecycle().value) {
         is UiState.Loading -> {
             ShowCircularIndicator()
-            Log.e("MapScreen", "Init Loading")
         }
 
         is UiState.Success -> {
-            Log.e("MapScreen", "Init Success")
             val coordinate = state.data.coordinate
             val newCoordinates = LatLng(coordinate.lat, coordinate.lon)
-            LaunchedEffect(idCountry) {
-                Log.e("MapScreen", "LaunchedEffect")
-                cameraPositionState.animate(
-                    update = CameraUpdateFactory.newLatLngZoom(newCoordinates, 15f)
-                )
-            }
             ShowGoogleMap(
                 modifier = modifier,
                 cameraPositionState = cameraPositionState,
@@ -54,7 +45,6 @@ fun ShowMapScreen(
         }
 
         is UiState.Failure -> {
-            Log.e("MapScreen", "Init Failure")
             navController.navigate(Route.Failure.createRoute(state.exception.message ?: ""))
         }
     }
@@ -66,8 +56,12 @@ fun ShowGoogleMap(
     cameraPositionState: CameraPositionState,
     coordinates: LatLng
 ) {
-    Log.e("MapScreen", "GoogleMap")
-    Log.e("MapScreen", "Coordinates: Lat: ${coordinates.latitude} - Lon: ${coordinates.longitude}")
+    LaunchedEffect(coordinates) {
+        cameraPositionState.animate(
+            update = CameraUpdateFactory.newLatLngZoom(coordinates, 15f),
+            durationMs = 1000
+        )
+    }
     GoogleMap(
         modifier = modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
