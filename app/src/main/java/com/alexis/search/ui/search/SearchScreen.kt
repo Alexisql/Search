@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Favorite
@@ -116,6 +117,17 @@ fun Search(text: String, onValueChange: (String) -> Unit) {
                 imageVector = Icons.Default.Search,
                 contentDescription = "Search"
             )
+        },
+        trailingIcon = {
+            if (text.isNotEmpty()) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        onValueChange("")
+                    },
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = "Search"
+                )
+            }
         },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
