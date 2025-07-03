@@ -5,26 +5,26 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import com.alexis.search.domain.model.City
 import com.alexis.search.ui.home.HomeViewModel
 import com.alexis.search.ui.maps.ShowMapScreen
 import com.alexis.search.ui.search.SearchScreen
+import com.google.maps.android.compose.CameraPositionState
 
 @Composable
 fun LandscapeScreen(
     modifier: Modifier,
+    navController: NavHostController,
     query: String,
     lazyCity: LazyPagingItems<City>,
-    homeViewModel: HomeViewModel
+    cameraPositionState: CameraPositionState,
+    homeViewModel: HomeViewModel,
+    idCountry: Int,
+    onChangeCountry: (Int) -> Unit
 ) {
-    var idCountry by rememberSaveable { mutableIntStateOf(0) }
-
     Row(
         modifier = modifier.fillMaxSize()
     ) {
@@ -37,7 +37,7 @@ fun LandscapeScreen(
                     homeViewModel.searchCity(it)
                 },
                 onItemSelected = {
-                    idCountry = it
+                    onChangeCountry(it)
                 },
                 onFavoriteChange = { cityId, isFavorite ->
                     homeViewModel.updateFavorite(cityId, isFavorite)
@@ -47,7 +47,9 @@ fun LandscapeScreen(
         Box(modifier = modifier.weight(0.5f)) {
             ShowMapScreen(
                 modifier = modifier,
-                idCountry = idCountry
+                idCountry = idCountry,
+                cameraPositionState = cameraPositionState,
+                navController = navController
             )
         }
     }

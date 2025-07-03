@@ -13,10 +13,12 @@ import com.alexis.search.ui.core.ShowErrorScreen
 import com.alexis.search.ui.home.HomeScreen
 import com.alexis.search.ui.maps.ShowMapScreen
 import com.alexis.search.ui.route.Route
+import com.google.maps.android.compose.CameraPositionState
 
 @Composable
 fun Navigation(
     navController: NavHostController,
+    cameraPositionState: CameraPositionState,
     innerPadding: PaddingValues
 ) {
     NavHost(
@@ -27,7 +29,8 @@ fun Navigation(
         composable(Route.Home.route) {
             HomeScreen(
                 modifier = Modifier,
-                navController = navController
+                navController = navController,
+                cameraPositionState = cameraPositionState
             )
         }
         composable(
@@ -38,7 +41,9 @@ fun Navigation(
         ) { backStackEntry ->
             ShowMapScreen(
                 modifier = Modifier,
-                idCountry = backStackEntry.arguments?.getInt("idCountry") ?: 0
+                idCountry = backStackEntry.arguments?.getInt("idCountry") ?: 0,
+                navController = navController,
+                cameraPositionState= cameraPositionState,
             )
         }
         composable(

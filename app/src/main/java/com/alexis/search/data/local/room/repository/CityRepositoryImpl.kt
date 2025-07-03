@@ -76,7 +76,7 @@ class CityRepositoryImpl @Inject constructor(
         return try {
             cityDao.getCityById(cityId)?.let {
                 Result.success(it.toDomain())
-            } ?: Result.failure(Exception("City not found"))
+            } ?: Result.success(City.empty())
         } catch (exception: Exception) {
             Log.e("CityRepositoryImpl", "Error getting city by ID", exception)
             Result.failure(exception)
