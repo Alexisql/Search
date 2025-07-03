@@ -2,24 +2,37 @@ package com.alexis.search.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.alexis.search.di.DispatcherDefault
+import com.alexis.search.di.DispatcherIO
+import com.alexis.search.domain.model.City
 import com.alexis.search.domain.repository.ICityRepository
 import com.alexis.search.ui.core.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val cityRepository: ICityRepository,
-    @DispatcherDefault private val dispatcherDefault: CoroutineDispatcher
+    @DispatcherDefault private val dispatcherDefault: CoroutineDispatcher,
+    @DispatcherIO private val dispatcherIO: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UiState<Unit>>(UiState.Loading)
     val state: StateFlow<UiState<Unit>> = _state
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     init {
         initDatabase()
@@ -32,4 +45,19 @@ class HomeViewModel @Inject constructor(
                 .onFailure { _state.value = UiState.Failure(it) }
         }
     }
+
+    val cities: Flow<PagingData<City>> = _searchQuery
+        .debounce(300)
+        .flatMapLatest { query ->
+            if (query.isBlank()) {
+                flowOf(PagingData.empty())
+            } else {
+                cityRepository.searchCity(query)
+            }
+        }.cachedIn(viewModelScope)
+
+    fun searchCity(query: String) {
+        _searchQuery.value = query
+    }
+
 }

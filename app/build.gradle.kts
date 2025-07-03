@@ -74,6 +74,7 @@ dependencies {
 
     //Paging
     implementation(libs.paging)
+    implementation(libs.paging.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

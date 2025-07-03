@@ -21,8 +21,7 @@ class CityRepositoryImpl @Inject constructor(
 
     override suspend fun insertAll(): Result<Unit> {
         return try {
-            val count = cityDao.getCount()
-            if (count == 0) {
+            if (cityDao.getCount() == 0) {
                 val cities = cityDataSource.getCitiesFromJsonAsset()
                 cities.chunked(1000).forEach {
                     cityDao.insertAll(it)
