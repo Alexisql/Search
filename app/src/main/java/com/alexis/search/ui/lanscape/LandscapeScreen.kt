@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import com.alexis.search.domain.model.City
@@ -19,6 +23,8 @@ fun LandscapeScreen(
     lazyCity: LazyPagingItems<City>,
     homeViewModel: HomeViewModel
 ) {
+    var idCountry by rememberSaveable { mutableIntStateOf(0) }
+
     Row(
         modifier = modifier.fillMaxSize()
     ) {
@@ -27,14 +33,21 @@ fun LandscapeScreen(
                 modifier = modifier,
                 query = query,
                 lazyCity = lazyCity,
-            ) {
-                homeViewModel.searchCity(it)
-            }
+                onQueryChange = {
+                    homeViewModel.searchCity(it)
+                },
+                onItemSelected = {
+                    idCountry = it
+                },
+                onFavoriteChange = { cityId, isFavorite ->
+                    homeViewModel.updateFavorite(cityId, isFavorite)
+                }
+            )
         }
         Box(modifier = modifier.weight(0.5f)) {
             ShowMapScreen(
                 modifier = modifier,
-                idCountry = 0
+                idCountry = idCountry
             )
         }
     }

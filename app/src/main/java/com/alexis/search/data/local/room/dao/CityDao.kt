@@ -19,5 +19,12 @@ interface CityDao {
     @Query("SELECT * FROM City WHERE name LIKE :cityName || '%' ORDER BY name")
     fun searchCities(cityName: String): PagingSource<Int, CityEntity>
 
+    @Query("UPDATE City SET favorite = :isFavorite WHERE id = :cityId")
+    suspend fun updateFavorite(cityId: Int, isFavorite: Boolean): Int
 
+    @Query("SELECT * FROM City WHERE favorite = 1 ORDER BY name")
+    fun getFavoriteCities(): PagingSource<Int, CityEntity>
+
+    @Query("SELECT * FROM City WHERE id = :cityId")
+    suspend fun getCityById(cityId: Int): CityEntity?
 }

@@ -35,11 +35,51 @@ class CityRepositoryImpl @Inject constructor(
     }
 
     override fun searchCity(cityName: String): Flow<PagingData<City>> {
-        return Pager(
-            config = PagingConfig(pageSize = 50),
-            pagingSourceFactory = { cityDao.searchCities(cityName) }
-        ).flow.map { pagingData ->
-            pagingData.map { it.toDomain() }
+        return try {
+            Pager(
+                config = PagingConfig(pageSize = 10),
+                pagingSourceFactory = { cityDao.searchCities(cityName) }
+            ).flow.map { pagingData ->
+                pagingData.map { it.toDomain() }
+            }
+        } catch (exception: Exception) {
+            Log.e("CityRepositoryImpl", "Error searching city", exception)
+            throw Exception("Error searching city", exception)
+        }
+    }
+
+    override suspend fun updateFavorite(cityId: Int, isFavorite: Boolean): Result<Unit> {
+        return try {
+            cityDao.updateFavorite(cityId, isFavorite)
+            Result.success(Unit)
+        } catch (exception: Exception) {
+            Log.e("CityRepositoryImpl", "Error updating favorite status", exception)
+            Result.failure(exception)
+        }
+    }
+
+    override fun getFavoriteCities(): Flow<PagingData<City>> {
+        return try {
+            Pager(
+                config = PagingConfig(pageSize = 10),
+                pagingSourceFactory = { cityDao.getFavoriteCities() }
+            ).flow.map { pagingData ->
+                pagingData.map { it.toDomain() }
+            }
+        } catch (exception: Exception) {
+            Log.e("CityRepositoryImpl", "Error getting favorite cities", exception)
+            throw Exception("Error getting favorite cities", exception)
+        }
+    }
+
+    override suspend fun getCityById(cityId: Int): Result<City> {
+        return try {
+            cityDao.getCityById(cityId)?.let {
+                Result.success(it.toDomain())
+            } ?: Result.failure(Exception("City not found"))
+        } catch (exception: Exception) {
+            Log.e("CityRepositoryImpl", "Error getting city by ID", exception)
+            Result.failure(exception)
         }
     }
 }

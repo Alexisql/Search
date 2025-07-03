@@ -44,9 +44,16 @@ fun HomeScreen(
                     modifier = modifier,
                     query = query,
                     lazyCity = cities,
-                ) {
-                    homeViewModel.searchCity(it)
-                }
+                    onQueryChange = {
+                        homeViewModel.searchCity(it)
+                    },
+                    onItemSelected = {
+                        navController.navigate(Route.Maps.createRoute(it))
+                    },
+                    onFavoriteChange = { cityId, isFavorite ->
+                        homeViewModel.updateFavorite(cityId, isFavorite)
+                    }
+                )
             }
         }
 

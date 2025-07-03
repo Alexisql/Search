@@ -1,5 +1,6 @@
 package com.alexis.search.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -15,9 +16,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -47,17 +48,34 @@ class HomeViewModel @Inject constructor(
     }
 
     val cities: Flow<PagingData<City>> = _searchQuery
-        .debounce(300)
+        .debounce(250)
         .flatMapLatest { query ->
             if (query.isBlank()) {
-                flowOf(PagingData.empty())
+                cityRepository.getFavoriteCities().catch {
+                    emit(PagingData.empty())
+                }
             } else {
-                cityRepository.searchCity(query)
+                cityRepository.searchCity(query).catch {
+                    emit(PagingData.empty())
+                }
             }
         }.cachedIn(viewModelScope)
 
     fun searchCity(query: String) {
         _searchQuery.value = query
     }
+
+    fun updateFavorite(cityId: Int, isFavorite: Boolean) {
+        viewModelScope.launch(dispatcherIO) {
+            cityRepository.updateFavorite(cityId, isFavorite)
+                .onSuccess {
+                    Log.e("HomeViewModel", "Favorite status updated successfully")
+                }
+                .onFailure {
+                    Log.e("HomeViewModel", "Error updating favorite status", it)
+                }
+        }
+    }
+
 
 }

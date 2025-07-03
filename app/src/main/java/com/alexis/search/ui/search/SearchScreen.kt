@@ -1,5 +1,6 @@
 package com.alexis.search.ui.search
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,8 +19,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -28,11 +32,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
+import com.alexis.search.R
 import com.alexis.search.domain.model.City
 import com.alexis.search.ui.core.ShowSpacer
 
@@ -41,7 +48,9 @@ fun SearchScreen(
     modifier: Modifier,
     query: String,
     lazyCity: LazyPagingItems<City>,
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
+    onItemSelected: (Int) -> Unit,
+    onFavoriteChange: (Int, Boolean) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -68,10 +77,14 @@ fun SearchScreen(
                     if (item != null) {
                         ShowSpacer(10)
                         ItemCity(
-                            city = item
-                        ) {
-
-                        }
+                            city = item,
+                            onItemSelected = {
+                                onItemSelected(it)
+                            },
+                            onFavoriteChange = { cityId, isFavorite ->
+                                onFavoriteChange(cityId, isFavorite)
+                            }
+                        )
                     } else {
                         LoadingItemPlaceholder()
                     }
@@ -111,7 +124,7 @@ fun Search(text: String, onValueChange: (String) -> Unit) {
 }
 
 @Composable
-fun ItemCity(city: City, onItemSelected: (Int) -> Unit) {
+fun ItemCity(city: City, onItemSelected: (Int) -> Unit, onFavoriteChange: (Int, Boolean) -> Unit) {
     Card(
         shape = RoundedCornerShape(10.dp)
     ) {
@@ -151,15 +164,14 @@ fun ItemCity(city: City, onItemSelected: (Int) -> Unit) {
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                imageVector = Icons.Default.FavoriteBorder,
-                contentDescription = "Location Icon",
-                modifier = Modifier
-                    .size(50.dp)
-                    .clickable {
-
-                    }
-            )
+            val  isFavorite = city.favorite
+            AddFloatingButton(
+                imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                color = if (isFavorite) Color.Red else Color.Black,
+                contentDescription = R.string.favorite_icon
+            ) {
+                onFavoriteChange(city.id, !isFavorite)
+            }
         }
     }
 }
@@ -176,6 +188,23 @@ fun LoadingItemPlaceholder() {
     ) {
         Text(
             text = "List Empty",
+        )
+    }
+}
+
+
+@Composable
+fun AddFloatingButton(
+    imageVector: ImageVector,
+    color: Color = Color.Black,
+    @StringRes contentDescription: Int,
+    onIconClickListener: () -> Unit
+) {
+    FloatingActionButton(onClick = { onIconClickListener() }) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = stringResource(contentDescription),
+            tint = color
         )
     }
 }
