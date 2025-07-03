@@ -15,7 +15,10 @@ import com.alexis.search.ui.maps.ShowMapScreen
 import com.alexis.search.ui.route.Route
 
 @Composable
-fun Navigation(navController: NavHostController, innerPadding: PaddingValues) {
+fun Navigation(
+    navController: NavHostController,
+    innerPadding: PaddingValues
+) {
     NavHost(
         navController = navController,
         startDestination = Route.Home.route,
