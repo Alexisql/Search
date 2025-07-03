@@ -3,6 +3,9 @@ package com.alexis.search.ui.home
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,6 +30,7 @@ fun HomeScreen(
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val query by homeViewModel.searchQuery.collectAsStateWithLifecycle()
     val cities = homeViewModel.cities.collectAsLazyPagingItems()
+    var idCountry by rememberSaveable { mutableIntStateOf(0) }
 
     when (val state = homeViewModel.state.collectAsStateWithLifecycle().value) {
         is UiState.Loading -> {
@@ -36,12 +40,15 @@ fun HomeScreen(
         is UiState.Success -> {
             if (isLandscape) {
                 LandscapeScreen(
-                    modifier = modifier,
                     navController = navController,
                     query = query,
                     lazyCity = cities,
                     cameraPositionState = cameraPositionState,
-                    homeViewModel = homeViewModel
+                    homeViewModel = homeViewModel,
+                    idCountry = idCountry,
+                    onChangeCountry = {
+                        idCountry = it
+                    }
                 )
             } else {
                 SearchScreen(
@@ -52,6 +59,7 @@ fun HomeScreen(
                         homeViewModel.searchCity(it)
                     },
                     onItemSelected = {
+                        idCountry = it
                         navController.navigate(Route.Maps.createRoute(it))
                     },
                     onFavoriteChange = { cityId, isFavorite ->

@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
@@ -20,37 +16,36 @@ import com.google.maps.android.compose.CameraPositionState
 
 @Composable
 fun LandscapeScreen(
-    modifier: Modifier,
     navController: NavHostController,
     query: String,
     lazyCity: LazyPagingItems<City>,
     cameraPositionState: CameraPositionState,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    idCountry: Int,
+    onChangeCountry: (Int) -> Unit
 ) {
-    var idCountry by rememberSaveable { mutableIntStateOf(0) }
-
     Row(
-        modifier = modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
-        Column(modifier = modifier.weight(0.5f)) {
+        Column(modifier = Modifier.weight(0.5f)) {
             SearchScreen(
-                modifier = modifier,
+                modifier = Modifier,
                 query = query,
                 lazyCity = lazyCity,
                 onQueryChange = {
                     homeViewModel.searchCity(it)
                 },
                 onItemSelected = {
-                    idCountry = it
+                    onChangeCountry(it)
                 },
                 onFavoriteChange = { cityId, isFavorite ->
                     homeViewModel.updateFavorite(cityId, isFavorite)
                 }
             )
         }
-        Box(modifier = modifier.weight(0.5f)) {
+        Box(modifier = Modifier.weight(0.5f)) {
             ShowMapScreen(
-                modifier = modifier,
+                modifier = Modifier,
                 idCountry = idCountry,
                 cameraPositionState = cameraPositionState,
                 navController = navController

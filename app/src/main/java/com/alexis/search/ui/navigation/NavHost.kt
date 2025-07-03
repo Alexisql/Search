@@ -13,14 +13,21 @@ import com.alexis.search.ui.core.ShowErrorScreen
 import com.alexis.search.ui.home.HomeScreen
 import com.alexis.search.ui.maps.ShowMapScreen
 import com.alexis.search.ui.route.Route
-import com.google.maps.android.compose.CameraPositionState
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun Navigation(
     navController: NavHostController,
-    cameraPositionState: CameraPositionState,
     innerPadding: PaddingValues
 ) {
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(
+            LatLng(0.0, -0.0),
+            15f
+        )
+    }
     NavHost(
         navController = navController,
         startDestination = Route.Home.route,
