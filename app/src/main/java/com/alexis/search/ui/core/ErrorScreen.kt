@@ -15,14 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.alexis.search.R
 
 @Composable
 fun ShowErrorScreen(
     modifier: Modifier,
-    message: String,
-    navController: NavHostController
+    message: String
 ) {
     Box(
         modifier = modifier
@@ -49,13 +47,6 @@ fun ShowErrorScreen(
                 text = message
             )
             ShowSpacer(20)
-        }
-        ShowButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd),
-            label = "Back"
-        ) {
-            navController.popBackStack()
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.alexis.search.ui.core.ShowErrorScreen
+import com.alexis.search.ui.detail.DetailCityScreen
 import com.alexis.search.ui.home.HomeScreen
 import com.alexis.search.ui.maps.ShowMapScreen
 import com.alexis.search.ui.route.Route
@@ -61,7 +62,17 @@ fun Navigation(
         ) { backStackEntry ->
             ShowErrorScreen(
                 modifier = Modifier,
-                message = backStackEntry.arguments?.getString("message") ?: "",
+                message = backStackEntry.arguments?.getString("message") ?: ""
+            )
+        }
+        composable(
+            route = Route.Detail.route,
+            arguments = listOf(
+                navArgument("idCountry") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            DetailCityScreen(
+                idCountry = backStackEntry.arguments?.getInt("idCountry") ?: 0,
                 navController = navController
             )
         }

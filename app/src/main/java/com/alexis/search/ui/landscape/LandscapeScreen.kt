@@ -1,4 +1,4 @@
-package com.alexis.search.ui.lanscape
+package com.alexis.search.ui.landscape
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.alexis.search.domain.model.City
 import com.alexis.search.ui.home.HomeViewModel
 import com.alexis.search.ui.maps.ShowMapScreen
+import com.alexis.search.ui.route.Route
 import com.alexis.search.ui.search.SearchScreen
 import com.google.maps.android.compose.CameraPositionState
 
@@ -40,6 +41,9 @@ fun LandscapeScreen(
                 },
                 onFavoriteChange = { cityId, isFavorite ->
                     homeViewModel.updateFavorite(cityId, isFavorite)
+                },
+                onNavigateToDetail = {
+                    navController.navigate(Route.Detail.createRoute(it))
                 }
             )
         }

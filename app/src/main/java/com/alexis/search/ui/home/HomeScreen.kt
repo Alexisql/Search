@@ -14,7 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.alexis.search.ui.core.ShowCircularIndicator
 import com.alexis.search.ui.core.UiState
-import com.alexis.search.ui.lanscape.LandscapeScreen
+import com.alexis.search.ui.landscape.LandscapeScreen
 import com.alexis.search.ui.route.Route
 import com.alexis.search.ui.search.SearchScreen
 import com.google.maps.android.compose.CameraPositionState
@@ -64,6 +64,9 @@ fun HomeScreen(
                     },
                     onFavoriteChange = { cityId, isFavorite ->
                         homeViewModel.updateFavorite(cityId, isFavorite)
+                    },
+                    onNavigateToDetail = {
+                        navController.navigate(Route.Detail.createRoute(it))
                     }
                 )
             }
