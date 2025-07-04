@@ -1,7 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
+}
+
+val properties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    properties.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -16,6 +26,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["API_KEY"] = properties.getProperty("GOOGLE_MAPS_API_KEY")
     }
 
     buildTypes {
@@ -37,10 +49,45 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packaging {
+        resources {
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
 }
 
 dependencies {
 
+    //Hilt
+    implementation(libs.hilt)
+    implementation(libs.hilt.navigation)
+    ksp(libs.hilt.compiler)
+
+    //Navigation
+    implementation(libs.navigation.compose)
+
+    //Google Map
+    implementation(libs.google.map)
+
+    //Gson
+    implementation(libs.gson)
+
+    //Room
+    implementation(libs.room)
+    implementation(libs.room.paging)
+    ksp(libs.room.compiler)
+
+    //Paging
+    implementation(libs.paging)
+    implementation(libs.paging.compose)
+
+    //MockK
+    androidTestImplementation(libs.mockk.android)
+
+    androidTestImplementation(libs.paging.test)
+    testImplementation(libs.coroutines.test)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
