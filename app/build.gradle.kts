@@ -49,6 +49,13 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packaging {
+        resources {
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+        }
+    }
 }
 
 dependencies {
@@ -76,6 +83,11 @@ dependencies {
     implementation(libs.paging)
     implementation(libs.paging.compose)
 
+    //MockK
+    androidTestImplementation(libs.mockk.android)
+
+    androidTestImplementation(libs.paging.test)
+    testImplementation(libs.coroutines.test)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

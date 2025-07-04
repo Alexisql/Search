@@ -9,13 +9,15 @@ lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
 composeBom = "2025.06.01"
 hilt = "2.49"
-navigation = "2.9.0"
+navigation = "2.9.1"
 hiltNavigation = "1.2.0"
 map = "4.4.1"
 gson = "2.11.0"
 room = "2.7.2"
 paging = "3.3.6"
 ksp = "2.0.21-1.0.27"
+coroutinesTest = "1.7.3"
+mockk = "1.13.10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +45,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+paging-test = { group = "androidx.paging", name = "paging-testing", version.ref = "paging" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
