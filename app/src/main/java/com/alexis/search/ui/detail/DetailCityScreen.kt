@@ -42,7 +42,11 @@ fun DetailCityScreen(
         }
 
         is UiState.Failure -> {
-            navController.navigate(Route.Failure.createRoute(state.exception.message ?: ""))
+            navController.navigate(
+                Route.Failure.createRoute(
+                    state.exception.message ?: stringResource(id = R.string.exception)
+                )
+            )
         }
     }
 }

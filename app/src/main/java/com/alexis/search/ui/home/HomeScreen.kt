@@ -8,10 +8,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.alexis.search.R
 import com.alexis.search.ui.core.ShowCircularIndicator
 import com.alexis.search.ui.core.UiState
 import com.alexis.search.ui.landscape.LandscapeScreen
@@ -73,7 +75,11 @@ fun HomeScreen(
         }
 
         is UiState.Failure -> {
-            navController.navigate(Route.Failure.createRoute(state.exception.message ?: ""))
+            navController.navigate(
+                Route.Failure.createRoute(
+                    state.exception.message ?: stringResource(id = R.string.exception)
+                )
+            )
         }
     }
 }

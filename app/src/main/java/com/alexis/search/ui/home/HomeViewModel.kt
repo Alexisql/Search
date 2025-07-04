@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.alexis.search.di.DispatcherDefault
 import com.alexis.search.di.DispatcherIO
 import com.alexis.search.domain.model.City
 import com.alexis.search.domain.repository.ICityRepository
@@ -19,13 +18,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val cityRepository: ICityRepository,
-    @DispatcherDefault private val dispatcherDefault: CoroutineDispatcher,
     @DispatcherIO private val dispatcherIO: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -40,7 +39,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun initDatabase() {
-        viewModelScope.launch(dispatcherDefault) {
+        viewModelScope.launch {
             cityRepository.insertAll()
                 .onSuccess { _state.value = UiState.Success(Unit) }
                 .onFailure { _state.value = UiState.Failure(it) }
@@ -59,6 +58,7 @@ class HomeViewModel @Inject constructor(
         .catch {
             emit(PagingData.empty())
         }
+        .flowOn(dispatcherIO)
         .cachedIn(viewModelScope)
 
     fun searchCity(query: String) {

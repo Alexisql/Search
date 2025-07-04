@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.alexis.search.R
 import com.alexis.search.ui.core.ShowCircularIndicator
 import com.alexis.search.ui.core.UiState
 import com.alexis.search.ui.route.Route
@@ -45,7 +47,11 @@ fun ShowMapScreen(
         }
 
         is UiState.Failure -> {
-            navController.navigate(Route.Failure.createRoute(state.exception.message ?: ""))
+            navController.navigate(
+                Route.Failure.createRoute(
+                    state.exception.message ?: stringResource(id = R.string.exception)
+                )
+            )
         }
     }
 }

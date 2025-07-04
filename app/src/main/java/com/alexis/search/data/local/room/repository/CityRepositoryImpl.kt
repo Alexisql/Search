@@ -10,27 +10,32 @@ import com.alexis.search.data.local.room.dao.CityDao
 import com.alexis.search.data.local.room.entity.toDomain
 import com.alexis.search.domain.model.City
 import com.alexis.search.domain.repository.ICityRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CityRepositoryImpl @Inject constructor(
     private val cityDao: CityDao,
     private val cityDataSource: CityDataSource,
+    private val dispatcherDefault: CoroutineDispatcher
 ) : ICityRepository {
 
     override suspend fun insertAll(): Result<Unit> {
-        return try {
-            if (cityDao.getCount() == 0) {
-                val cities = cityDataSource.getCitiesFromJsonAsset()
-                cities.chunked(1000).forEach {
-                    cityDao.insertAll(it)
+        return withContext(dispatcherDefault) {
+            try {
+                if (cityDao.getCount() == 0) {
+                    val cities = cityDataSource.getCitiesFromJsonAsset()
+                    cities.chunked(1000).forEach {
+                        cityDao.insertAll(it)
+                    }
                 }
+                Result.success(Unit)
+            } catch (exception: Exception) {
+                Log.e("CityRepositoryImpl", "Error inserting cities", exception)
+                Result.failure(exception)
             }
-            Result.success(Unit)
-        } catch (exception: Exception) {
-            Log.e("CityRepositoryImpl", "Error inserting cities", exception)
-            Result.failure(exception)
         }
     }
 

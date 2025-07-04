@@ -37,14 +37,14 @@ object SearchModule {
     @DispatcherIO
     @Singleton
     @Provides
-    fun provideDispacherIO(): CoroutineDispatcher {
+    fun provideDispatcherIO(): CoroutineDispatcher {
         return Dispatchers.IO
     }
 
     @DispatcherDefault
     @Singleton
     @Provides
-    fun provideDispacherDefault(): CoroutineDispatcher {
+    fun provideDispatcherDefault(): CoroutineDispatcher {
         return Dispatchers.Default
     }
 
@@ -59,8 +59,12 @@ object SearchModule {
 
     @Singleton
     @Provides
-    fun providerCityRepository(cityDao: CityDao, cityDataSource: CityDataSource): ICityRepository {
-        return CityRepositoryImpl(cityDao, cityDataSource)
+    fun providerCityRepository(
+        cityDao: CityDao,
+        cityDataSource: CityDataSource,
+        @DispatcherDefault dispatcherDefault: CoroutineDispatcher
+    ): ICityRepository {
+        return CityRepositoryImpl(cityDao, cityDataSource, dispatcherDefault)
     }
 
 }
