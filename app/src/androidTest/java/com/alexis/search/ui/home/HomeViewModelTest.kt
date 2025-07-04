@@ -10,13 +10,11 @@ import com.alexis.search.data.local.datasource.CityDataSource
 import com.alexis.search.data.local.room.CityDataBase
 import com.alexis.search.data.local.room.dao.CityDao
 import com.alexis.search.data.local.room.repository.CityRepositoryImpl
-import com.alexis.search.domain.repository.ICityRepository
 import com.alexis.search.ui.data.local.room.entity.CityEntityBuilder
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -33,15 +31,19 @@ class HomeViewModelTest {
 
     private lateinit var cityDao: CityDao
     private lateinit var dataBase: CityDataBase
-    private lateinit var cityRepositoryMock: ICityRepository
     private lateinit var viewModel: HomeViewModel
 
     @Before
     fun initBefore() = runTest {
         initDataBase()
-        cityRepositoryMock =
+        val cityRepositoryMock =
             CityRepositoryImpl(cityDao, mockk<CityDataSource>(), mainDispatcherRule.testDispatcher)
         viewModel = HomeViewModel(cityRepositoryMock, mainDispatcherRule.testDispatcher)
+    }
+
+    @After
+    fun closeDatabase() {
+        dataBase.close()
     }
 
     private suspend fun initDataBase() {
