@@ -9,3 +9,8 @@ class CoordinateBuilder {
     fun build() = coordinate
 
 }
+
+fun Coordinate.toDomain() = com.alexis.search.domain.model.Coordinate(
+    lat = this.lat,
+    lon = this.lon
+)
