@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -116,7 +117,8 @@ fun Search(text: String, onValueChange: (String) -> Unit) {
                 width = 1.dp,
                 color = Color(0xFFCCCCCC),
                 shape = RoundedCornerShape(25.dp)
-            ),
+            )
+            .testTag(stringResource(id = R.string.search_tag)),
         shape = RoundedCornerShape(25.dp),
         leadingIcon = {
             Icon(
@@ -201,7 +203,8 @@ fun ItemCity(
         ShowButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .testTag("${stringResource(id = R.string.navigate_detail_city_tag)}-${city.id}"),
             label = stringResource(id = R.string.detail)
         ) {
             onNavigateToDetail(city.id)
