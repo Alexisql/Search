@@ -50,6 +50,12 @@ android {
         compose = true
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+
     packaging {
         resources {
             excludes += "META-INF/LICENSE.md"
@@ -82,12 +88,23 @@ dependencies {
     //Paging
     implementation(libs.paging)
     implementation(libs.paging.compose)
+    testImplementation(libs.paging.test)
+    androidTestImplementation(libs.paging.test)
 
     //MockK
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.mockk.android)
 
-    androidTestImplementation(libs.paging.test)
+    //Robolectric
+    testImplementation(libs.robolectric)
+
+    //Test
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.junit)
     testImplementation(libs.coroutines.test)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -96,11 +113,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

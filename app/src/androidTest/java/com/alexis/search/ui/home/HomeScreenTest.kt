@@ -11,9 +11,8 @@ import androidx.compose.ui.test.performTextInput
 import androidx.navigation.NavHostController
 import androidx.paging.PagingData
 import com.alexis.search.domain.model.City
+import com.alexis.search.domain.model.CityBuilder
 import com.alexis.search.ui.core.UiState
-import com.alexis.search.ui.data.local.room.entity.CityEntityBuilder
-import com.alexis.search.ui.data.local.room.entity.toDomain
 import com.alexis.search.ui.route.Route
 import com.google.maps.android.compose.rememberCameraPositionState
 import io.mockk.every
@@ -45,14 +44,14 @@ class HomeScreenTest {
     ) {
         val homeViewModelMock = mockk<HomeViewModel>()
         val searchQuery = MutableStateFlow("")
+        every { homeViewModelMock.state } returns MutableStateFlow(UiState.Success(Unit))
+        every { homeViewModelMock.searchQuery } returns searchQuery
+        every { homeViewModelMock.searchCity(any()) } answers {
+            searchQuery.value = query
+        }
+        every { homeViewModelMock.cities } returns flowOf(PagingData.from(citiesFake))
 
         composeTestRule.setContent {
-            every { homeViewModelMock.state } returns MutableStateFlow(UiState.Success(Unit))
-            every { homeViewModelMock.searchQuery } returns searchQuery
-            every { homeViewModelMock.searchCity(any()) } answers {
-                searchQuery.value = query
-            }
-            every { homeViewModelMock.cities } returns flowOf(PagingData.from(citiesFake))
             HomeScreen(
                 modifier = Modifier.fillMaxSize(),
                 navController = navController,
@@ -65,7 +64,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_displaysCities_Success() {
         setScreenContent(
-            citiesFake = CityEntityBuilder().toDomain()
+            citiesFake = CityBuilder().build()
         )
 
         composeTestRule.onNodeWithText("Bogota-CO").assertIsDisplayed()
@@ -79,7 +78,7 @@ class HomeScreenTest {
         val query = "Medellin"
         setScreenContent(
             query = query,
-            citiesFake = CityEntityBuilder().toDomain()
+            citiesFake = CityBuilder().build()
         )
 
         val textFieldSearch = composeTestRule.onNodeWithTag(SEARCH_TAG)
@@ -92,7 +91,7 @@ class HomeScreenTest {
 
     @Test
     fun homeScreen_navigateToDetail_Success() {
-        val citiesFake = CityEntityBuilder().toDomain()
+        val citiesFake = CityBuilder().build()
         val citySelectedId = citiesFake[0].id
 
         setScreenContent(

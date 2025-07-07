@@ -1,16 +1,15 @@
 package com.alexis.search.ui.home
 
-import android.content.Context
+import android.os.Build
 import androidx.paging.testing.asSnapshot
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.alexis.search.MainDispatcherRule
 import com.alexis.search.data.local.datasource.CityDataSource
 import com.alexis.search.data.local.room.CityDataBase
 import com.alexis.search.data.local.room.dao.CityDao
+import com.alexis.search.data.local.room.entity.CityEntityBuilder
 import com.alexis.search.data.local.room.repository.CityRepositoryImpl
-import com.alexis.search.ui.data.local.room.entity.CityEntityBuilder
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -21,9 +20,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.S])
 class HomeViewModelTest {
 
     @get:Rule
@@ -47,8 +49,10 @@ class HomeViewModelTest {
     }
 
     private suspend fun initDataBase() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        dataBase = Room.inMemoryDatabaseBuilder(context, CityDataBase::class.java)
+        dataBase = Room.inMemoryDatabaseBuilder(
+            ApplicationProvider.getApplicationContext(),
+            CityDataBase::class.java
+        )
             .allowMainThreadQueries()
             .build()
         cityDao = dataBase.getCityDao()
