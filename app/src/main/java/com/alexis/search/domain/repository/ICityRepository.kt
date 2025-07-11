@@ -10,4 +10,5 @@ interface ICityRepository {
     suspend fun updateFavorite(cityId: Int, isFavorite: Boolean): Result<Unit>
     fun getFavoriteCities(): Flow<PagingData<City>>
     suspend fun getCityById(cityId: Int): Result<City>
+    fun getAllCities(): Flow<PagingData<City>>
 }

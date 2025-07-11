@@ -27,4 +27,7 @@ interface CityDao {
 
     @Query("SELECT * FROM City WHERE id = :cityId")
     suspend fun getCityById(cityId: Int): CityEntity?
+
+    @Query("SELECT * FROM City")
+    fun getAllCities(): PagingSource<Int, CityEntity>
 }
