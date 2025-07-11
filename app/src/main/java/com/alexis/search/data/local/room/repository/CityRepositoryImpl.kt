@@ -87,4 +87,18 @@ class CityRepositoryImpl @Inject constructor(
             Result.failure(exception)
         }
     }
+
+    override fun getAllCities(): Flow<PagingData<City>> {
+        return try {
+            Pager(
+                config = PagingConfig(pageSize = 10),
+                pagingSourceFactory = { cityDao.getAllCities() }
+            ).flow.map { pagingData ->
+                pagingData.map { it.toDomain() }
+            }
+        } catch (exception: Exception) {
+            Log.e("CityRepositoryImpl", "Error getting cities", exception)
+            throw Exception("Error getting cities", exception)
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.alexis.search.ui.home
 
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -17,6 +18,7 @@ import com.alexis.search.R
 import com.alexis.search.ui.core.ShowCircularIndicator
 import com.alexis.search.ui.core.UiState
 import com.alexis.search.ui.landscape.LandscapeScreen
+import com.alexis.search.ui.maps.ShowMapScreen
 import com.alexis.search.ui.route.Route
 import com.alexis.search.ui.search.SearchScreen
 import com.google.maps.android.compose.CameraPositionState
@@ -53,24 +55,37 @@ fun HomeScreen(
                     }
                 )
             } else {
-                SearchScreen(
-                    modifier = modifier,
-                    query = query,
-                    lazyCity = cities,
-                    onQueryChange = {
-                        homeViewModel.searchCity(it)
-                    },
-                    onItemSelected = {
-                        idCountry = it
-                        navController.navigate(Route.Maps.createRoute(it))
-                    },
-                    onFavoriteChange = { cityId, isFavorite ->
-                        homeViewModel.updateFavorite(cityId, isFavorite)
-                    },
-                    onNavigateToDetail = {
-                        navController.navigate(Route.Detail.createRoute(it))
+                if (idCountry != 0) {
+                    ShowMapScreen(
+                        modifier = Modifier,
+                        idCountry = idCountry,
+                        navController = navController,
+                        cameraPositionState = cameraPositionState,
+                    )
+                } else {
+                    SearchScreen(
+                        modifier = modifier,
+                        query = query,
+                        lazyCity = cities,
+                        onQueryChange = {
+                            homeViewModel.searchCity(it)
+                        },
+                        onItemSelected = {
+                            idCountry = it
+                        },
+                        onFavoriteChange = { cityId, isFavorite ->
+                            homeViewModel.updateFavorite(cityId, isFavorite)
+                        },
+                        onNavigateToDetail = {
+                            navController.navigate(Route.Detail.createRoute(it))
+                        }
+                    )
+                }
+                if (idCountry != 0) {
+                    BackHandler {
+                        idCountry = 0
                     }
-                )
+                }
             }
         }
 

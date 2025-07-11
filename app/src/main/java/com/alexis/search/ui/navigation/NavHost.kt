@@ -12,7 +12,6 @@ import androidx.navigation.navArgument
 import com.alexis.search.ui.core.ShowErrorScreen
 import com.alexis.search.ui.detail.DetailCityScreen
 import com.alexis.search.ui.home.HomeScreen
-import com.alexis.search.ui.maps.ShowMapScreen
 import com.alexis.search.ui.route.Route
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -39,19 +38,6 @@ fun Navigation(
                 modifier = Modifier,
                 navController = navController,
                 cameraPositionState = cameraPositionState
-            )
-        }
-        composable(
-            route = Route.Maps.route,
-            arguments = listOf(
-                navArgument("idCountry") { type = NavType.IntType }
-            )
-        ) { backStackEntry ->
-            ShowMapScreen(
-                modifier = Modifier,
-                idCountry = backStackEntry.arguments?.getInt("idCountry") ?: 0,
-                navController = navController,
-                cameraPositionState= cameraPositionState,
             )
         }
         composable(
