@@ -5,16 +5,23 @@
 <img src="https://img.shields.io/badge/Jetpack%20Compose-%23FFFFFF?logo=jetpackcompose">
 </p>
 
-Para la resolución del challenge se decide guardar la información en Room, para luego realizar la búsqueda de manera paginada con Paging 3, con el fin de mostrar los datos bajo demanda.
+App móvil moderna para explorar y buscar ciudades de forma eficiente, construida con Kotlin y Jetpack Compose. Utiliza Room y Paging 3 para manejar grandes volúmenes de datos, todo estructurado bajo la arquitectura Clean Architecture y los lineamientos de Android recomendados por Google.
 
-Room:
-<br>
-Room utiliza SQLite como base de datos, la cual está diseñada para búsquedas rápidas en dispositivos móviles.
+## Características del proyecto:
 
-Paging 3:
-<br>
-Paging funciona bajo demanda, lo que permite obtener solo los datos necesarios para mostrar en pantalla, mejorando la experiencia de usuario.
-<br>
-
-## Observaciones:
-- Se implementa robolectric para las pruebas unitarias debido a la necesidad de obtener el Contexto de Android, para la inicialización de Room.
+- Clean Architecture
+- Arquitectura **MVVM**.
+- Principios **SOLID**
+- Corrutinas
+- Flows
+- StateFlow
+- Room
+- Paging 3
+- Inyección de dependencias con **Dagger Hilt**
+- Jetpack Compose
+- Google Maps
+- JUnit
+- Coroutines Test
+- Mockk
+- Robolectric
+- AndroidTest
